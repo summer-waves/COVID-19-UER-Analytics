@@ -1,0 +1,6 @@
+dash>=2.17
+plotly>=5.20
+pandas>=2.0
+numpy
+scikit-learn
+openpyxl
