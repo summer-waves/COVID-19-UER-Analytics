@@ -270,28 +270,6 @@ The original May 2025 notebook (`COVID-19 and Unemployment Rate Analytics.ipynb`
 
 The original notebook also used Matplotlib and Seaborn for static charts; the dashboard itself uses Plotly only.
 
-## 🚀 How to Run
-
-```bash
-git clone https://github.com/summer-waves/COVID-19-UER-Analytics.git
-cd COVID-19-UER-Analytics
-
-python -m venv venv
-venv\Scripts\activate          # Windows
-# source venv/bin/activate     # macOS / Linux
-
-pip install -r requirements.txt
-
-python fetch_context_data.py   # optional: vaccination + stringency data (needs internet)
-python app.py
-```
-
-Then open **http://127.0.0.1:8050**.
-
-- Put the core spreadsheet in `data/`. If it has a different file name, update `CORE_FILE` at the top of `data_prep.py`.
-- Without `owid-covid-data.csv`, the app still runs; the Policy context tab shows a message instead.
-- To reproduce the India test: `python india_test.py` (or `python india_test.py Brazil`).
-- Windows may block scikit-learn's compiled files on some machines; `forecast.py` falls back to an equivalent numpy implementation if that happens.
 
 ## 🗂️ Data Sources
 
