@@ -1,6 +1,3 @@
-"""COVID-19 & Unemployment Rate Analytics - Plotly Dash dashboard.
-Run:  python app.py   then open http://127.0.0.1:8050
-"""
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
