@@ -1,4 +1,3 @@
-"""Small, honest unemployment forecaster: Ridge regression on lagged features."""
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import RidgeCV
@@ -17,7 +16,6 @@ def _covs(g: pd.DataFrame) -> list[str]:
 
 
 def _design(g: pd.DataFrame, covs: list[str]):
-    """Each row predicts this month's unemployment from LAST month(s) only."""
     u = g["unemployment_rate"]
     logc = np.log1p(g["new_covid_cases"])
     X = pd.DataFrame({
@@ -31,7 +29,6 @@ def _design(g: pd.DataFrame, covs: list[str]):
 
 
 def backtest(g: pd.DataFrame, n_test: int = 6):
-    """Walk-forward: refit on everything before month i, predict month i. Compare to 'same as last month'."""
     g = g.sort_values("date").reset_index(drop=True)
     X, y, dates = _design(g, _covs(g))
     n_test = min(n_test, len(X) - 8)
@@ -51,7 +48,6 @@ def backtest(g: pd.DataFrame, n_test: int = 6):
 
 
 def forecast(g: pd.DataFrame, horizon: int = 3, case_multiplier: float = 1.0):
-    """Recursive multi-step forecast. Future cases are a SCENARIO: last-3-month average x multiplier."""
     g = g.sort_values("date").reset_index(drop=True)
     covs = _covs(g)
     X, y, _ = _design(g, covs)
