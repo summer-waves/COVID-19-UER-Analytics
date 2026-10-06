@@ -1,18 +1,16 @@
-"""Loading, cleaning and merging data for the COVID-19 / Unemployment dashboard."""
 from pathlib import Path
 import numpy as np
 import pandas as pd
 
 DATA_DIR = Path(__file__).parent / "data"
-CORE_FILE = DATA_DIR / "COVID-19 Project COVID Cases.xlsx"  # your original file
-OWID_FILE = DATA_DIR / "owid-covid-data.csv"      # optional: vaccination + stringency
-STIMULUS_FILE = DATA_DIR / "stimulus.csv"         # optional: country,date,stimulus_pct_gdp
+CORE_FILE = DATA_DIR / "COVID-19 Project COVID Cases.xlsx" 
+OWID_FILE = DATA_DIR / "owid-covid-data.csv"      
+STIMULUS_FILE = DATA_DIR / "stimulus.csv"        
 
 CONTEXT_COLS = ["stringency_index", "people_fully_vaccinated_per_hundred", "stimulus_pct_gdp"]
 
 
 def _parse_dates(s: pd.Series) -> pd.Series:
-    """Handles real Excel dates AND text like '1/20' (month/year)."""
     if pd.api.types.is_datetime64_any_dtype(s):
         return s
     as_text = pd.to_datetime(s.astype(str).str.strip(), format="%m/%y", errors="coerce")
@@ -23,7 +21,6 @@ def _parse_dates(s: pd.Series) -> pd.Series:
 
 
 def load_core(path=CORE_FILE) -> pd.DataFrame:
-    """Same cleaning steps as the original notebook, plus snapping dates to month start."""
     df = pd.read_excel(path) if str(path).endswith(("xlsx", "xls")) else pd.read_csv(path)
     df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
     df["date"] = _parse_dates(df["date"]).dt.to_period("M").dt.to_timestamp()
@@ -34,7 +31,6 @@ def load_core(path=CORE_FILE) -> pd.DataFrame:
 
 
 def _load_owid(path=OWID_FILE) -> pd.DataFrame | None:
-    """Collapses OWID's data into one row per country-month; tolerates column-name differences."""
     if not Path(path).exists():
         return None
     header = pd.read_csv(path, nrows=0).columns
@@ -63,7 +59,6 @@ def _load_stimulus(path=STIMULUS_FILE) -> pd.DataFrame | None:
 
 
 def load_all() -> pd.DataFrame:
-    """Core data + whichever optional context files exist."""
     df = load_core()
     for extra in (_load_owid(), _load_stimulus()):
         if extra is not None:
