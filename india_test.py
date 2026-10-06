@@ -1,6 +1,3 @@
-"""Does India's April-May 2020 lockdown spike distort the forecast model?
-Run:  python india_test.py     (any country: python india_test.py Brazil)
-"""
 import sys
 import numpy as np
 import pandas as pd
@@ -9,8 +6,6 @@ from forecast import _design, _covs, _model
 
 
 def run(g, drop_start="2020-04-01", drop_end="2020-07-01", n_test=6):
-    """Walk-forward backtest, with and without the lockdown-spike months in the TRAINING data.
-    Apr-Jul 2020 rows are dropped because Apr/May hold the spike and Jun/Jul use them as lags."""
     g = g.sort_values("date").reset_index(drop=True)
     X, y, dates = _design(g, _covs(g))
     dates = dates.reset_index(drop=True); X = X.reset_index(drop=True); y = y.reset_index(drop=True)
